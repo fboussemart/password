@@ -1,12 +1,12 @@
 {
-  "name": "server-quizz",
+  "name": "test-password",
   "version": "1.0.0",
-  "description": "Beautiful Server",
+  "description": "Password exercise",
   "main": "index.js",
   "scripts": {
     "database": "mongod --smallfiles",
     "server": "nodemon server.js",
-    "reinitDB": "mongo localhost:27017/quizz db/data.js"
+    "reinitDB": "mongo localhost:27017/testDB db/data.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,25 +1,70 @@
 const express = require("express");
-
-const bodyParser = require("body-parser");
 const router = express.Router();
 
 const db = require('./db/mongoose');
 const Users = db.users;
+const Cities = db.cities;
+
+const protect = (req, res, f) => {
+    if (!req.headers || !req.headers.username || !req.headers.password) {
+        res.json({isConnected: false});
+        return;
+    }
+    Users.findOne({username: req.headers.username, password: req.headers.password})
+        .exec((err, data) => {
+            if (err) console.log("error", err);
+            else {
+                if (data) f(req, res);
+                else res.json({isConnected: false})
+            }
+        })
+};
+
 
 router
-  .use(express.static('resources'))
-  .use(bodyParser.json()) // for parsing application/json
-  .use(bodyParser.urlencoded({
-    extended: true
-  })) // for parsing application/x-www-form-urlencoded
-  .get("/users", (req, res) => {
-    Users
-      .find({})
-      .exec((err, data) => {
-        if (err) console.log("error", err);
-        else res.json(data);
-      });
-  })
+    .get("/cities", (req, res) => {
+        protect(req, res, () => {
+            Cities
+                .find({})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else res.json(data);
+                });
+        })
+    })
+    .post("/login", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username, password: req.body.password})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: true});
+                        else res.json({isConnected: false})
+                    }
+                })
+        }
+    })
+    .post("/signUp", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: false});
+                        else {
+                            const q = new Users({username:req.body.username,password:req.body.password});
+                            q.save()
+                                .then(() => res.json({isConnected: true}))
+                                .catch(err => res.status(400).send("unable to save to database:", err))
+                        }
+                    }
+                })
+        }
+    })
   .use((req, res) => {
     res.status(400);
     res.json({

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // db connexion
-mongoose.connect('mongodb://localhost/myDB',{ useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/testDB',{ useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -16,9 +16,16 @@ const usersSchema = Schema({
   password: String
 });
 
+const citiesSchema = Schema({
+  name: String,
+  country: String
+});
+
 
 // exports
 const Users = mongoose.model('Users', usersSchema);
+const Cities = mongoose.model('Cities', citiesSchema);
 
 module.exports = {};
 module.exports.users = Users;
+module.exports.cities = Cities;
