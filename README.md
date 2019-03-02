@@ -31,7 +31,42 @@ This application is a very simplified example of connexion with authenticated us
     });
     ```
     Of course, other fields (email, phone, ...) can be added to the collection *users*
-1. Chain the `post('/login',...)` and `post('/signUp',...)` routes to your router.
+1. Add the `post('/login',...)` and `post('/signUp',...)` routes to your router.
+    ```
+    .post("/login", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username, password: req.body.password})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: true});
+                        else res.json({isConnected: false})
+                    }
+                })
+        }
+    })
+    .post("/signUp", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: false});
+                        else {
+                            const q = new Users({username:req.body.username,password:req.body.password});
+                            q.save()
+                                .then(() => res.json({isConnected: true}))
+                                .catch(err => res.status(400).send("unable to save to database:", err))
+                        }
+                    }
+                })
+        }
+    })
+    ```
 1. **Optional :** To protect the routes on server side, proceed as follows:
     - copy the `protect` function into your *router.js* file
     ```
