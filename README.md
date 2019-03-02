@@ -126,7 +126,7 @@ This application is a very simplified example of connexion with authenticated us
     ```
     - Check the `Login.getUser()` method before rendering the protected routes
     - Render the component `<Login checkConnexion={(b) => this.checkConnexion(b)}/>`
-1. **Option 2:** using *Login.js* ina *Route* component
+1. **Option 2:** using *Login.js* in a *Route* component
     - adapt your *App* class, as presented in this example:
     ```
     class App extends Component {
@@ -166,6 +166,7 @@ This application is a very simplified example of connexion with authenticated us
     const protectedLinks = this.props.connected ?
             <li><Link className="nav-link" to={"/protected"}>Protected </Link></li> : null;
     ```
+## Using protected routes on client side
 1. When you need to access a protected route, add the users informations into the *headers* of your HTTP request by using the `Login.getUser()` method.
 For example, to get the cities list:
     ```
