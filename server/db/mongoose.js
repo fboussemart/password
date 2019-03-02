@@ -12,14 +12,14 @@ db.once('open', () => {
 
 // database collections
 const usersSchema = Schema({
-  name: String,
+  username: String,
   password: String
-});
+},{ versionKey: false });
 
 const citiesSchema = Schema({
   name: String,
   country: String
-});
+},{ versionKey: false });
 
 
 // exports
