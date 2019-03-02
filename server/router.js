@@ -20,7 +20,6 @@ const protect = (req, res, f) => {
         })
 };
 
-
 router
     .get("/cities", (req, res) => {
         protect(req, res, () => {

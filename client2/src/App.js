@@ -24,7 +24,7 @@ class App extends Component {
                 <Route exact={true} path="/" component={Home}/>
                 <Route exact={true} path="/home" component={Home}/>
                 <Route exact={true} path="/login"
-                       render={props => <Login {...props} checkConnexion={b => this.checkConnexion(b)} redirect={false}/>}/>
+                       render={props => <Login {...props} checkConnexion={b => this.checkConnexion(b)} />}/>
                 <ProtectedRoute exact={true} path="/protected" component={Protected}/>
                 <Route path="*" component={() => <p>Page Not Found</p>}/>
             </Switch>
