@@ -12,7 +12,7 @@ This application is a very simplified example of connexion with authenticated us
 
 ## Adapting server side
 1. Create a *users* collection in your database
-    - In the *mongoose.js* file, you can define the schema as follows:
+    - In the *mongoose.js* file, you can define the following schema:
     ```
     const usersSchema = Schema(
       {
@@ -30,7 +30,7 @@ This application is a very simplified example of connexion with authenticated us
         password: '123'
     });
     ```
-    Of course, other fields (email, phone, ...) can be added to the collection *users*
+    Of course, other fields (email, ...) can be added to the collection *users*. In that case, you will have to manage these new fields in adapting the forms (see the *renderForm* method in the *Login.js* class.
 1. Add the following *post('/login',...)* and *post('/signUp',...)* routes to your router.
     ```
     .post("/login", (req, res) => {
