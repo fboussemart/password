@@ -20,7 +20,7 @@ router
                 }
             })
     })
-    .get("/cities", (req, res) => {
+    .get("auth/cities", (req, res) => {
         Cities
             .find({})
             .exec((err, data) => {
