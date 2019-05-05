@@ -2,17 +2,20 @@
 This application is a very simplified example of connexion with authenticated user. Passwords and user names are sent and recorded in plain text. This is just an exercise. Don't use it in a real world context.
 
 # Try the application
-1. Clone this project
-1. Enter `npm install` both on *server* and *client* sides. Two examples are proposed: *client1* and *client2*
-1. Enter `npm run reinitDB` on *server* side, and then `npm run server`
-1. Enter `npm start` on *client* side
-1. The *protected* route only appears when a user is logged in. The only user recorded in *users* collection is *toto* with password *123*.
+In order to try this application, you need *MongoDB* to be installed and running on your computer.
 
-# Using this code in your application
+1. Clone this project.
+1. Enter `npm install` both on *server* and *client* sides. Two examples are proposed: *client1* and *client2*.
+1. Enter `npm run resetDB` on *server* side. Note that a new *MongoDB* database called *testDB* is created.
+1. Enter `npm start` on *server* side.
+1. Enter `npm start` on *client* side.
+1. The *protected* route only appears when a user is logged in. The only one user which is recorded in *users* collection is *toto* with password *123*.
+
+# Adapting your own application by using this application
 
 ## Adapting server side
-1. Create a *users* collection in your database
-    - In the *mongoose.js* file, you can define the following schema:
+1. The *users* collection
+    - In the *models.js* file, define the following schema:
     ```
     const usersSchema = Schema(
       {
@@ -22,7 +25,7 @@ This application is a very simplified example of connexion with authenticated us
       { versionKey: false }
     );
     ```
-    - In a *MongoDB* environment, you can create the first user as follows:
+    - In a *MongoDB* environment, create the first user as follows:
     ```
     db.users.drop();
     db.users.insert({
@@ -30,7 +33,8 @@ This application is a very simplified example of connexion with authenticated us
         password: '123'
     });
     ```
-    Of course, other fields (email, ...) can be added to the collection *users*. In that case, you will have to manage these new fields in adapting the forms (see the *renderForm* method in the *Login.js* class.
+    Of course, other fields (email, ...) can be added to the collection *users*.
+    In that case, you will have to manage these new fields in adapting the forms (see the *renderForm* method in the *Login.js* class).
 1. Add the following *post('/login',...)* and *post('/signUp',...)* routes to your router.
     ```
     .post("/login", (req, res) => {
@@ -69,38 +73,27 @@ This application is a very simplified example of connexion with authenticated us
     ```
 
 ## Optional: protecting routes on server side
-1. copy the *protect* function into your *router.js* file
+1. copy the first route of the *router.js* file into your own *router.js* file
     ```
-    const protect = (req, res, f) => {
-    if (!req.headers || !req.headers.username || !req.headers.password) {
-        res.json({isConnected: false});
-        return;
-    }
-    Users.findOne({username: req.headers.username, password: req.headers.password})
-        .exec((err, data) => {
-            if (err) console.log("error", err);
-            else {
-                if (data) f(req, res);
-                else res.json({isConnected: false})
-            }
-        })
-    };
-    ```
-1. to protect a route, wrap the anonymous function as described on the following example:
-    - consider an unprotected route:
-    ```
-    .get("/cities", (req, res) => {
-        Cities
-            .find({})
+    router
+    .all("/auth/*", (req, res, next) => {
+        if (!req.headers || !req.headers.username || !req.headers.password) {
+            res.json({isConnected: false});
+            return;
+        }
+        Users.findOne({username: req.headers.username, password: req.headers.password})
             .exec((err, data) => {
                 if (err) console.log("error", err);
-                else res.json(data);
-            });
+                else {
+                    if (data) next();
+                    else res.json({isConnected: false})
+                }
+            })
     })
     ```
-    - wrap it with the *protect* function as follows:
+1. Any route beginning with '/auth' is now protected :
     ```
-    .get("/cities", (req, res) => {
+    .get("/auth/cities", (req, res) => {
         protect(req, res, () => {
             Cities
                 .find({})
