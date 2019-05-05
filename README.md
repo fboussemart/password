@@ -165,7 +165,7 @@ In order to try this application, you need *MongoDB* to be installed and running
 1. When you need to access a protected route, add the users informations into the *headers* of your HTTP request by using the `Login.getUser()` method.
 For example, to get the cities list:
     ```
-    const cities = (await axios.get(HTTP_SERVER_PORT + 'cities', {headers: Login.getUser()})).data;
+    const cities = (await axios.get(HTTP_SERVER_PORT + 'auth/cities', {headers: Login.getUser()})).data;
     ```
 1. In each protected component add the following test before rendering:
     ```
