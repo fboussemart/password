@@ -3,7 +3,7 @@ This application is a very simplified example of connexion with authenticated us
 
 # Try the application
 1. Clone this project
-1. Enter `npm install` both on *server* and *client* sides
+1. Enter `npm install` both on *server* and *client* sides. Two examples are proposed: *client1* and *client2*
 1. Enter `npm run reinitDB` on *server* side, and then `npm run server`
 1. Enter `npm start` on *client* side
 1. The *protected* route only appears when a user is logged in. The only user recorded in *users* collection is *toto* with password *123*.
@@ -12,7 +12,7 @@ This application is a very simplified example of connexion with authenticated us
 
 ## Adapting server side
 1. Create a *users* collection in your database
-    - In the *mongoose.js* file, you can define the schema as follows:
+    - In the *mongoose.js* file, you can define the following schema:
     ```
     const usersSchema = Schema(
       {
@@ -30,10 +30,46 @@ This application is a very simplified example of connexion with authenticated us
         password: '123'
     });
     ```
-    Of course, other fields (email, phone, ...) can be added to the collection *users*
-1. Chain the `post('/login',...)` and `post('/signUp',...)` routes to your router.
-1. **Optional :** To protect the routes on server side, proceed as follows:
-    - copy the `protect` function into your *router.js* file
+    Of course, other fields (email, ...) can be added to the collection *users*. In that case, you will have to manage these new fields in adapting the forms (see the *renderForm* method in the *Login.js* class.
+1. Add the following *post('/login',...)* and *post('/signUp',...)* routes to your router.
+    ```
+    .post("/login", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username, password: req.body.password})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: true});
+                        else res.json({isConnected: false})
+                    }
+                })
+        }
+    })
+    .post("/signUp", (req, res) => {
+        if (!req.body.username || !req.body.password) {
+            res.json({isConnected: false})
+        } else {
+            Users.findOne({username: req.body.username})
+                .exec((err, data) => {
+                    if (err) console.log("error", err);
+                    else {
+                        if (data) res.json({isConnected: false});
+                        else {
+                            const q = new Users({username:req.body.username,password:req.body.password});
+                            q.save()
+                                .then(() => res.json({isConnected: true}))
+                                .catch(err => res.status(400).send("unable to save to database:", err))
+                        }
+                    }
+                })
+        }
+    })
+    ```
+
+## Optional: protecting routes on server side
+1. copy the *protect* function into your *router.js* file
     ```
     const protect = (req, res, f) => {
     if (!req.headers || !req.headers.username || !req.headers.password) {
@@ -50,7 +86,8 @@ This application is a very simplified example of connexion with authenticated us
         })
     };
     ```
-    - to protect a route, proceed as describe on the following example. Consider an unprotected route:
+1. to protect a route, wrap the anonymous function as described on the following example:
+    - consider an unprotected route:
     ```
     .get("/cities", (req, res) => {
         Cities
@@ -78,7 +115,7 @@ This application is a very simplified example of connexion with authenticated us
     
 ## Adapting client side
 1. Copy the file *Login.js* into your *client/src* directory
-1. **Option 1:** using *Login.js* in a *NavBar* class:
+1. **Option 1:** using *Login.js* in a *NavBar* class (see *client1* example)
     - add the following state into the constructor:
     ```
     this.state = {connected: false};
@@ -91,7 +128,7 @@ This application is a very simplified example of connexion with authenticated us
     ```
     - Check the `Login.getUser()` method before rendering the protected routes
     - Render the component `<Login checkConnexion={(b) => this.checkConnexion(b)}/>`
-1. **Option 2:** using *Login.js* ina *Route* component
+1. **Option 2:** using *Login.js* in a *Route* component (see *client2* example)
     - adapt your *App* class, as presented in this example:
     ```
     class App extends Component {
@@ -131,6 +168,7 @@ This application is a very simplified example of connexion with authenticated us
     const protectedLinks = this.props.connected ?
             <li><Link className="nav-link" to={"/protected"}>Protected </Link></li> : null;
     ```
+## Optional: using protected routes on client side
 1. When you need to access a protected route, add the users informations into the *headers* of your HTTP request by using the `Login.getUser()` method.
 For example, to get the cities list:
     ```
