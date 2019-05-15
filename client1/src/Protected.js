@@ -12,9 +12,8 @@ export default class Protected extends React.Component {
     }
 
     async loadData() {
-        const cities = (await axios.get(HTTP_SERVER_PORT + 'auth/cities', {headers: Login.getUser()})).data;
-        if (cities.isConnected === false) return;
-        this.setState({cities: cities});
+        const cities = (await axios.get(HTTP_SERVER_PORT + 'cities', {headers: Login.getUser()})).data;
+        if (cities) this.setState({cities: cities});
     }
 
     render() {

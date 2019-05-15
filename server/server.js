@@ -10,7 +10,7 @@ const port = 8081;
 app
     .use(cors())
     .use(morgan('combined'))
-    .use(express.static('resources'))
+    //.use(express.static('resources'))
     .use(bodyParser.json()) // for parsing application/json
     .use(bodyParser.urlencoded({
         extended: true

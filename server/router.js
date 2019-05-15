@@ -5,28 +5,34 @@ const models = require('./db/models');
 const Users = models.users;
 const Cities = models.cities;
 
-// router
-router
-    .all("/auth/*", (req, res, next) => {
-        if (!req.headers || !req.headers.username || !req.headers.password) {
-            res.json({isConnected: false});
-            return;
-        }
-        Users.findOne({username: req.headers.username, password: req.headers.password})
-            .exec((err, data) => {
-                if (err) console.log("error", err);
-                else {
-                    if (data) next();
-                    else res.json({isConnected: false})
+const verify = (req, res, next) => {
+    if (!req.headers || !req.headers.username || !req.headers.password) {
+        res.json({});
+        return;
+    }
+    Users.findOne({username: req.headers.username, password: req.headers.password})
+        .exec((err, data) => {
+            if (err) console.log("error", err);
+            else {
+                if (data) {
+                    next()
+                } else {
+                    res.json({})
                 }
-            })
-    })
-    .get("auth/cities", (req, res) => {
+            }
+        })
+};
+
+router
+    .get("/cities", verify, (req, res) => {
         Cities
             .find({})
             .exec((err, data) => {
-                if (err) console.log("error", err);
-                else res.json(data);
+                if (err) {
+                    console.log("error", err);
+                } else {
+                    res.json(data);
+                }
             });
     })
     .post("/login", (req, res) => {
@@ -63,10 +69,12 @@ router
         }
     })
     .use((req, res) => {
-        res.status(400);
-        res.json({
-            error: "Bad request"
-        });
+        console.log("bad request:", req.method, req.path);
+        res
+            .status(400)
+            .json({
+                error: "Bad request"
+            });
     });
 
 
