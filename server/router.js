@@ -5,6 +5,7 @@ const models = require('./db/models');
 const Users = models.users;
 const Cities = models.cities;
 
+// router
 router
     .all("/auth/*", (req, res, next) => {
         if (!req.headers || !req.headers.username || !req.headers.password) {
