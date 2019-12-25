@@ -4,8 +4,7 @@
   "description": "Password exercise",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "resetDB": "mongo testDB db/data.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,8 +12,10 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.4.4",
     "morgan": "^1.9.1",
-    "nodemon": "^1.18.9"
+    "serve-favicon": "^2.5.0",
+    "sqlite3": "^4.1.1"
   }
 }
