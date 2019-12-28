@@ -1,8 +1,8 @@
 import React from 'react';
-//import axios from "axios";
-//import {Route} from 'react-router-dom';
+import axios from "axios";
+import {Route} from 'react-router-dom';
 
-import {useCookies} from 'react-cookie';
+import {useCookies, withCookies} from 'react-cookie';
 
 //import {HTTP_SERVER_PORT} from "./constants";
 
@@ -30,7 +30,7 @@ function FormLogin(props) {
     );
 }
 
-export default function Login() {
+function Login() {
 
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
 
@@ -38,18 +38,45 @@ export default function Login() {
         removeCookie('login');
     }
 
-    function onSubmit(e) {
+    async function onSubmit(e) {
         e.preventDefault();
-        setCookie('login', {
+        const user = {
             username: e.target.username.value,
-            password: e.target.password.value,
-            isConnected: true
-        }, '/');
+            password: e.target.password.value
+        };
+        const p = (await axios.post('http://localhost:8000/signin', user));
+        if (p.status === 200) {
+            user.token = p.data.token;
+            console.log("user=", user);
+            setCookie('login', user, '/');
+        }
     }
 
-    if (cookies.login && cookies.login.isConnected) {
+    if (cookies.login && cookies.login.username) {
         return <button id="disconnect" onClick={disconnect}>disconnect</button>;
     }
     return <FormLogin onSubmit={onSubmit} cookies={cookies} setCookie={setCookie}/>
 }
+function ProtectedRoute1({component: Component, ...rest}) {
+    if (rest.allCookies && rest.allCookies.login && rest.allCookies.login.username && rest.allCookies.login.token) {
+        return (
+            <Route
+                {...rest}
+                render={routeProps => (
+                    <Component {...routeProps} username={rest.allCookies.login.username}
+                               token={rest.allCookies.login.token}/>
+                )}
+            />
+        );
+    }
+    return <p>!!</p>;
+}
 
+const ProtectedRoute = withCookies(ProtectedRoute1);
+export {ProtectedRoute};
+export default Login;
+
+
+//render={props => <Protected {...props}
+//                                                username={cookies.login.username}
+//                                                token={cookies.login.token}

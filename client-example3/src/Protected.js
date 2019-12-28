@@ -1,14 +1,23 @@
 import React from "react";
-// import Login from "./Login";
-// import axios from "axios";
+//import Login from "./Login";
+import axios from "axios";
 // import {HTTP_SERVER_PORT} from "./constants";
 
-import {useCookies} from 'react-cookie';
+//import {useCookies} from 'react-cookie';
 
-export default function Protected() {
-    const [cookies, setCookie] = useCookies(['name']);
-    const name = cookies.name;
-    return <p> Protected area for {name}</p>
+export default function Protected(props) {
+    //const [cookies, setCookie] = useCookies(['name']);
+    //const name = cookies.name;
+    axios.defaults.headers.get['Authorization'] = 'Bearer ' + props.token;
+
+    async function getCities() {
+        const p = (await axios.get('http://localhost:8000/cities')).data
+        console.log("p=", p);
+    }
+
+    getCities();
+    console.log("protected props=",props);
+    return <p> Protected area for {props.username}</p>
 }
 
 /*

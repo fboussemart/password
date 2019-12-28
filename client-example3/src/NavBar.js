@@ -13,7 +13,7 @@ export default class NavBar extends React.Component {
         const publicLinks = [
             <li key="home"><Link className="nav-link" to={"/home"}>Home </Link></li>,
             <li key="login"><Link className="nav-link" to={"/login"}>Login </Link></li>,
-            <li key="pp"><Link className="nav-link" to={"/protected"}>pp </Link></li>
+            <li key="cities"><Link className="nav-link" to={"/protected"}>pp </Link></li>
         ];
         const protectedLinks = this.props.connected ?
             <li><Link className="nav-link" to={"/protected"}>Protected </Link></li> : null;

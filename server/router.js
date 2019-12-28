@@ -33,7 +33,7 @@ function checkUserPassword(user, res, next) {
     );
 }
 
-// vérifier que le body est bien formé lors de l'envoi d'un formulaire "signin" ou "sigup"
+// vérifier que le body est bien formé lors de l'envoi d'un formulaire POST
 function checkBodyUser(req, res, next) {
     console.log("checkBodyUser....");
     if (!req.body || !req.body.username || !req.body.password) {
@@ -88,8 +88,18 @@ function verify(req, res, next) {
 
 // les routes valides du server
 router
-    .get("/test", verify, (req, res) => {
-        res.json({test: 'test OK'});
+    .get("/cities", verify, (req, res) => {
+        db.all('select * from city',
+            (err, rows) => {
+                if (err) {
+                    console.log("err : ", err);
+                    res.status(500).end();
+                }else{
+                    res.status(200).json(rows);
+                }
+            }
+        );
+        //res.json({test: 'test OK'});
     })
     .post("/signin", checkBodyUser, (req, res, next) => {
         checkUserPassword(req.body, res, next)
