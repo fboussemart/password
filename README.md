@@ -1,8 +1,8 @@
 # password
-This application is a very simplified example of connexion with authenticated user. Passwords and user names are sent and recorded in plain text. This is just an exercise. Don't use it in a real world context.
+This application is a very simplified example of connexion with authenticated user. Client and server connections are performed in HTTP. Don't use it in a real world context.
 
 # Try the application
-In order to try this application, you need *MongoDB* to be installed and running on your computer.
+In order to try this application, you need *SQLite* to be installed and running on your computer.
 
 1. Clone this project.
 1. Enter `npm install` both on *server* and *client* sides. Two examples are proposed: *client1* and *client2*.
