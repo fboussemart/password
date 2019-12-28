@@ -31,6 +31,46 @@ Of course, in your app, you will have to choose between a link to a connection f
     - The connection form is replaced by a button
     - A new link (*cities*) appears rendering the list of cities
 
-# Adapting your own application by using this application
+# Adapting your own server
+If you want to adapt your own App in order to deal with user accounts, you have to adapt your server as follows:
+1. Verify that your *SQLite* database contains a *user* table. If not, you can both adapt your database, or modify the queries in the  file *connectionRouter.js*.
+1. Verify your file *package.json* and install the missing packages.
+1. Copy the file *connectionRouter.js* into your own server app.
+1. In your *server.js* file, add the following lines:
+    ```
+    const connectionRouter = require('./connectionRouter').router;
+    ...
+    app.use(connectionRouter); // before your app.use(router) line
+    ```
+1. In your *router.js* file, add the following lines:
+    ```
+    const sqlite3 = require('sqlite3').verbose();
+    const db = new sqlite3.Database('db/data'); // connection to the SQLite database
+    const verify=require('./connectionRouter').verify; // middleware function to protect routes
+    ```
+1. Each time you want to protect an endpoint, use the function *verify* as follows:
+    ```
+    router
+    .get("/your_endpoint", verify, (req, res) => {...} 
+    ```
+    Now, the endpoint `your_endpoint` is only accessible by connected users.
 
+# Adapting your client
+1. Verify your file *package.json* and install the missing packages.
+1. Copy the file *Login.js* into your own client app.
+
+## Protected routes
+If you are using `react-router-dom`, you can protect routes by using `<ProtectedRoutes/>` as follows:
+```
+import {ProtectedRoute} from "./Login";
+...
+<Switch>
+...
+    <ProtectedRoute exact={true} path="/your_path" component={Your_component} />
+...
+</Switch>
+```
+Then, the component `<Your_component/>` is only accessible by a connected user.
+
+## Protected links
 
