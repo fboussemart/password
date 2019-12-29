@@ -25,8 +25,10 @@ In the same time, an example application is proposed so that you can clearly und
 
 # Explanations
 
-1. The `<App/>` component defines the routes:
+1. The `<App/>` (*password/client/src/App.js*) component defines the routes:
     ```
+    import Login, {ProtectedRoute} from "./Login";
+    ...
     <Switch>
         <Route exact={true} path="/" component={Home}/>
         <Route exact={true} path="/home" component={Home}/>
@@ -36,9 +38,13 @@ In the same time, an example application is proposed so that you can clearly und
     </Switch>
     ```
     - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
+    - `<ProtectedRoute/>` is defined in file *password/client/src/Login.js*. A protected route is effective only if a user is connected.
+    - The fourth route points to component `<Login/>` defined in file *password/client/src/Login.js*. It allows rendering an authentication form.
 
-1. The navbar gives different links :
+1. The `<NavBar/>` (*password/client/src/NavBar.js*) gives different links :
     ```
+    import Login, {ProtectedLink} from './Login';
+    ...
     <nav className="navbar navbar-light bg-light">
         <Link className="nav-link" to={"/home"}>Home </Link>
         <Link className="nav-link" to={"/login"}>Login </Link>
@@ -46,20 +52,44 @@ In the same time, an example application is proposed so that you can clearly und
         <Login/>
     </nav>
     ```
-    - *Home* renders a *public* page. A classical `<Link/>` from *react-router-dom* is used.
-    - The second link renders the `<Login/>` component defined in *Login.js*. The login form (ot the disconnect button) is rendered.
-    - The third link is a `<ProtectedLink/>` also coming from *Login.js*. This link only appears when a user is logged in.
-    - The last line *Login* renders a connection form
-    
-The *Login* a link to a connection form and an integrated form in the navbar.
-1. Connect the user *toto* (password *123*).
-    - The connection form is replaced by a button
-    - A new link (*cities*) appears rendering the list of cities
+    - The first link is classical one.
+    - The second link points to the connection form defined in `<Login/>` component.
+    - The third link is a `<ProtectedLink/>` also coming from *Login.js*. A protected link only appears when a user is logged in.
+    - The last line renders the connection form right away in the NavBar. In your own app, your can decide between a link and a Form in the NavBar.
+    In your own app, your can decide between a link and a Form in the NavBar.
+1. The `<Cities/>` (*password/client/src/Cities.js*) component is a protected component : it is efficient only if a a user is connected to the server : 
+    ```
+    import axios from "axios";
+    import {HTTP_SERVER_PORT} from "./constants";
+    ...
+    export default function Cities(props) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + props.token;
+
+        const [cities, setCities] = useState([]);
+
+        async function getCities() {
+            const data = (await axios.get(HTTP_SERVER_PORT + 'cities')).data;
+            setCities(data);
+        }
+
+        useEffect(() => {
+            getCities()
+        }, []);
+        ...
+    ```
+    - `axios.default...` defines the header when connecting to the server. It allows the client to be authenticated by the server.
+    See [axios package](https://www.npmjs.com/package/axios).
+    - Asynchronious function `getCities` sends a *GET* request to the server
+
+# Trying the app
+Connect the user *toto* (password *123*):
+- The connection form is replaced by a button
+- A new link (*cities*) appears rendering the list of cities
 
 # Adapting your own server
 If you want to adapt your own App in order to deal with user accounts, you have to adapt your server as follows:
 1. Verify that your *SQLite* database contains a *user* table. If not, you can both adapt your database, or modify the queries in the  file *connectionRouter.js*.
-1. Verify your file *package.json* and install the missing packages.
+1. Verify your file *package.json*. Install the missing packages.
 1. Copy the file *connectionRouter.js* into your own server app.
 1. In your *server.js* file, add the following lines:
     ```
@@ -78,7 +108,7 @@ If you want to adapt your own App in order to deal with user accounts, you have 
     router
     .get("/your_endpoint", verify, (req, res) => {...} 
     ```
-    Now, the endpoint `your_endpoint` is only accessible by connected users.
+    Now, the endpoint `your_endpoint` is only accessible by authenticated users.
 
 # Adapting your client
 1. Verify your file *package.json* and install the missing packages.
