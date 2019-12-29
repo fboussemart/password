@@ -36,7 +36,7 @@ In the same time, an example application is proposed so that you can clearly und
     </Switch>
 ```
 
-    - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
+- The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
 
 1. The navbar gives different links :
     ```
