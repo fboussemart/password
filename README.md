@@ -23,8 +23,8 @@ In order to try this application, you need *SQLite* to be installed and running 
 
 # Have a look at the client App
 
-1 The `<App/>` component defines the routes:
-    ```
+1. The `<App/>` component defines the routes:
+```
     <Switch>
         <Route exact={true} path="/" component={Home}/>
         <Route exact={true} path="/home" component={Home}/>
@@ -32,7 +32,7 @@ In order to try this application, you need *SQLite* to be installed and running 
         <Route exact={true} path="/login" component={Login}/>
         <Route path="*" component={() => <p>Page Not Found</p>}/>
     </Switch>
-    ```
+```
     - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
 
 1. The navbar gives different links :
