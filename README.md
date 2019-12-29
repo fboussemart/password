@@ -21,12 +21,35 @@ In order to try this application, you need *SQLite* to be installed and running 
 1. Enter `npm start` on *server* side. By default, the server is running on port *8000*.
 1. Enter `npm start` on *client* side. By default, client is running on port *3000*.
 
-# A look at the App
-1. The navbar gives 3 links :
-    - *Home* renders a *public* page
-    - *Login* renders a connection form
-    - An integrated connection form
-Of course, in your app, you will have to choose between a link to a connection form or an integrated form in the navbar.
+# Have a look at the client App
+
+1 The `<App/>` component defines the routes:
+    ```
+    <Switch>
+        <Route exact={true} path="/" component={Home}/>
+        <Route exact={true} path="/home" component={Home}/>
+        <ProtectedRoute exact={true} path="/cities" component={Cities} />
+        <Route exact={true} path="/login" component={Login}/>
+        <Route path="*" component={() => <p>Page Not Found</p>}/>
+    </Switch>
+    ```
+    - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
+
+1. The navbar gives different links :
+    ```
+    <nav className="navbar navbar-light bg-light">
+        <Link className="nav-link" to={"/home"}>Home </Link>
+        <Link className="nav-link" to={"/login"}>Login </Link>
+        <ProtectedLink className="nav-link" to={"/cities"}>cities </ProtectedLink>
+        <Login/>
+    </nav>
+    ```
+    - *Home* renders a *public* page. A classical `<Link/>` from *react-router-dom* is used.
+    - The second link renders the `<Login/>` component defined in *Login.js*. The login form (ot the disconnect button) is rendered.
+    - The third link is a `<ProtectedLink/>` also coming from *Login.js*. This link only appears when a user is logged in.
+    - The last line *Login* renders a connection form
+    
+The *Login* a link to a connection form and an integrated form in the navbar.
 1. Connect the user *toto* (password *123*).
     - The connection form is replaced by a button
     - A new link (*cities*) appears rendering the list of cities
