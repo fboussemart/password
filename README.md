@@ -1,16 +1,18 @@
 # password
 This application is a very simplified example of connexion with authenticated user. Client and server connections are performed in HTTP. Don't use it in a real world context.
 
-# Try the application
-In order to try this application, you need *SQLite* to be installed and running on your computer.
+# The application
+The code provided in this project gives you the keys to create an application dealing with authentication.
+In the same time, an example application is proposed so that you can clearly understant what is going on.
 
+1. In order to try this application, you need *SQLite* to be installed and running on your computer.
 1. Clone this project.
 1. Create the database:
     - In directory *password/server/db* type the following command :
         ```
         sqlite3 -init data.sql data .exit
         ```
-    this will create the database *data* containing two tables : *user* and *city*. 
+    this creates the database *data* containing two tables : *user* and *city*. 
     - *user* only contains one line : *toto* whose password is *123*
     - *city* is given is given as an example, in order to gelp you to understand the app.
 1. Verify the database:
@@ -21,7 +23,7 @@ In order to try this application, you need *SQLite* to be installed and running 
 1. Enter `npm start` on *server* side. By default, the server is running on port *8000*.
 1. Enter `npm start` on *client* side. By default, client is running on port *3000*.
 
-# Have a look at the client App
+# Explanations
 
 1. The `<App/>` component defines the routes:
 ```
@@ -33,6 +35,7 @@ In order to try this application, you need *SQLite* to be installed and running 
         <Route path="*" component={() => <p>Page Not Found</p>}/>
     </Switch>
 ```
+
     - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
 
 1. The navbar gives different links :
