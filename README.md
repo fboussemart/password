@@ -136,9 +136,9 @@ As shown in *password/client/src/NavBar.js*, you can use *protected links* as fo
 ```
 import {ProtectedLink} from './Login';
 ...
-<ProtectedLink to={"/your_endpoint"}>your_text <Your_component/>
+<ProtectedLink to={"/your_endpoint"}> ... </ProtectedLink>
 ```
-In this way, the link to the component `<Your_component/>` only appears if a user is logged in.
+In this way, the link to the endpoint `/your_endpoint` is only effective when a user is logged in.
 
 ## Login form
 The `<Login/>` component provides a connection form.
