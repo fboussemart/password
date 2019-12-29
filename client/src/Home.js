@@ -1,5 +1,13 @@
 import React from 'react';
+import {useCookies} from 'react-cookie';
 
 export default function Home() {
-    return <div> Home is a public area no connexion to the server. No data access !! </div>
+    const [cookies] = useCookies(['login']);
+    const msg = cookies.login && cookies.login.username ? "connection OK" : "no connection";
+    return (
+        <>
+            <h4> Home is a public area</h4>
+            <p> {msg}</p>
+        </>
+    )
 }

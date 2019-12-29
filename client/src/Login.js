@@ -100,13 +100,8 @@ function LocalProtectedLink({...rest}) {
     }
 }
 
-function localIsConnected(...props){
-    return props.allCookies && props.allCookies.login && props.allCookies.login.username && props.allCookies.login.token
-}
-
 const ProtectedRoute = withCookies(LocalProtectedRoute);
 const ProtectedLink = withCookies(LocalProtectedLink);
-const isConnected = withCookies(localIsConnected);
 
-export {ProtectedRoute, ProtectedLink, isConnected};
+export {ProtectedRoute, ProtectedLink};
 export default Login;
