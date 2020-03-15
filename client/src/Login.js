@@ -42,7 +42,7 @@ function Login() {
         };
         try {
             const p = (await axios.post('http://localhost:8000/signup', user));
-            if (p.status === 201) {
+            if (p.status === 200) {
                 user.token = p.data.token;
                 setCookie('login', user, '/');
             }
@@ -68,7 +68,7 @@ function Login() {
         }
     }
 
-    if (cookies.login && cookies.login.username) {
+    if (cookies.login && cookies.login.token) {
         return <button id="disconnect" onClick={disconnect}>disconnect</button>;
     }
     return <FormLogin onSignin={onSignin} onSignup={onSignup} usernameRef={usernameRef} passwordRef={passwordRef}/>
