@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {HTTP_SERVER_PORT} from "./constants";
 
 export default function Cities(props) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + props.token;
@@ -8,7 +7,7 @@ export default function Cities(props) {
     const [cities, setCities] = useState([]);
 
     async function getCities() {
-        const data = (await axios.get(HTTP_SERVER_PORT + 'cities')).data;
+        const data = (await axios.get('http://localhost:8000/cities')).data;
         setCities(data);
     }
 

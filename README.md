@@ -31,13 +31,13 @@ In the same time, an example application is proposed so that you can clearly fig
     ```
     import Login, {ProtectedRoute} from "./Login";
     ...
-    <Switch>
-        <Route exact={true} path="/" component={Home}/>
-        <Route exact={true} path="/home" component={Home}/>
-        <ProtectedRoute exact={true} path="/cities" component={Cities} />
-        <Route exact={true} path="/login" component={Login}/>
-        <Route path="*" component={() => <p>Page Not Found</p>}/>
-    </Switch>
+    <Routes>
+        <Route exact={true} path="/" element={<Home/>}/>
+        <Route exact={true} path="/home" element={<Home/>}/>
+        <Route exact={true} path="/cities" element={<ProtectedRoute><Cities/></ProtectedRoute>}/>
+        <Route exact={true} path="/login" element={<Login/>}/>
+        <Route path="*" element={<Home/>}/>
+    </Routes>
     ```
     - The two first routes are classical ones. See [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) for more explanations.
     - `<ProtectedRoute/>` is defined in file *password/client/src/Login.js*. A protected route is effective only if a user is connected.
@@ -57,8 +57,9 @@ In the same time, an example application is proposed so that you can clearly fig
     - The first link is classical one.
     - The second link points to the connection form defined in `<Login/>` component.
     - The third link is a `<ProtectedLink/>` also coming from *Login.js*. A protected link only appears when a user is logged in.
-    - The last line renders the connection form right away in the NavBar. In your own app, your can decide between a link and a Form in the NavBar.
-    In your own app, your can decide between a link and a Form in the NavBar.
+    - The last line renders the connection form right away in the NavBar. 
+    - In your own app, your can decide between a link and a Form in the NavBar.
+
 1. The `<Cities/>` (*password/client/src/Cities.js*) component is a protected component : it is efficient only if a a user is connected to the server : 
     ```
     import axios from "axios";
@@ -90,7 +91,7 @@ Connect the user *toto* (password *123*):
 
 # Adapting your own server
 If you want to adapt your own App in order to deal with user accounts, you have to adapt your server as follows:
-1. Verify that your *SQLite* database contains a *user* table. If not, you can adapt your database, or modify the queries in the  file *connectionRouter.js*.
+1. Verify that your *SQLite* database contains a *user* table with a column *username* and a column *password*. If not, adapt your database, or modify the queries in the file *connectionRouter.js*.
 1. Verify your file *package.json* and install the missing packages if necessary.
 1. Copy the file *connectionRouter.js* into your own server app.
 1. In your *server.js* file, add the following lines:
@@ -123,11 +124,11 @@ If you are using `react-router-dom`, you can protect routes by using `<Protected
 ```
 import {ProtectedRoute} from "./Login";
 ...
-<Switch>
+<Routes>
 ...
-    <ProtectedRoute exact={true} path="/your_path" component={Your_component} />
+    <Route exact={true} path="/your_endpoint" element={<ProtectedRoute><Your_Component/></ProtectedRoute>}/>
 ...
-</Switch>
+</Routes>
 ```
 In this way, the component `<Your_component/>` is only accessible by a connected user.
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 
 import NavBar from './NavBar.js';
 import Cities from "./Cities";
@@ -7,16 +7,17 @@ import Home from "./Home";
 import Login, {ProtectedRoute} from "./Login";
 
 function App() {
-    return (<div>
-        <header><NavBar/></header>
-        <Switch>
-            <Route exact={true} path="/" component={Home}/>
-            <Route exact={true} path="/home" component={Home}/>
-            <ProtectedRoute exact={true} path="/cities" component={Cities} />
-            <Route exact={true} path="/login" component={Login}/>
-            <Route path="*" component={() => <p>Page Not Found</p>}/>
-        </Switch>
-    </div>);
+    return (
+        <div>
+            <header><NavBar/></header>
+            <Routes>
+                <Route exact={true} path="/" element={<Home/>}/>
+                <Route exact={true} path="/home" element={<Home/>}/>
+                <Route exact={true} path="/cities" element={<ProtectedRoute><Cities/></ProtectedRoute>}/>
+                <Route exact={true} path="/login" element={<Login/>}/>
+                <Route path="*" element={<Home/>}/>
+            </Routes>
+        </div>);
 }
 
 export default App;
