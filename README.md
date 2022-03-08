@@ -2,7 +2,7 @@
 This application is a very simplified example of connexion with authenticated user.
 To be more realistic, connections between client and server apps should be performed in [HTTPS](https://nodejs.org/api/https.html).
 Don't use it in a real world context.
-
+  
 # The application
 The code provided in this project gives you the keys to create an application dealing with authentication.
 In the same time, an example application is proposed so that you can clearly figure out the different mechanisms.
@@ -92,21 +92,23 @@ Connect the user *toto* (password *123*):
 # Adapting your own server
 If you want to adapt your own App in order to deal with user accounts, you have to adapt your server as follows:
 1. Verify that your *SQLite* database contains a *user* table with a column *username* and a column *password*. If not, adapt your database, or modify the queries in the file *connectionRouter.js*.
-1. Verify your file *package.json* and install the missing packages if necessary.
-1. Copy the file *connectionRouter.js* into your own server app.
-1. In your *server.js* file, add the following lines:
+2. Verify your file *package.json* and install the missing packages if necessary. You need at least the following packages to be installed:
+   - jsonwebtoken
+   - sqlite3
+3. Copy the file *connectionRouter.js* into your own server app.
+4. In your *server.js* file, add the following lines:
     ```
     const connectionRouter = require('./connectionRouter').router;
     ...
     app.use(connectionRouter); // before your app.use(router) line
     ```
-1. In your *router.js* file, add the following lines:
+5. In your *router.js* file, add the following lines:
     ```
     const sqlite3 = require('sqlite3').verbose();
     const db = new sqlite3.Database('db/data'); // connection to the SQLite database 'data'
     const verify=require('./connectionRouter').verify; // middleware function to protect routes
     ```
-1. Whenever you want to protect an endpoint, use the function *verify* as follows in your *router.js* file:
+6. Whenever you want to protect an endpoint, use the function *verify* as follows in your *router.js* file:
     ```
     const verify=require('./connectionRouter').verify;
     ...
@@ -116,8 +118,11 @@ If you want to adapt your own App in order to deal with user accounts, you have 
     Now, the endpoint `your_endpoint` is only accessible by authenticated users.
 
 # Adapting your client app
-1. Verify your file *package.json* and install the missing packages.
-1. Copy the file *Login.js* into your own client app.
+1. Verify your file *package.json* and install the missing packages. You need at least the following packages to be installed :
+   - react-cookie
+   - axios
+   - react-router-dom
+2. Copy the file *Login.js* into your own client app.
 
 ## Protected routes
 If you are using `react-router-dom`, you can protect routes by using `<ProtectedRoutes/>` as follows:
