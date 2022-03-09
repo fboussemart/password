@@ -87,14 +87,25 @@ function LocalProtectedRoute({children, ...rest}) {
  */
 function LocalProtectedLink({...rest}) {
     if (rest.allCookies && rest.allCookies.login && rest.allCookies.login.username && rest.allCookies.login.token) {
-        return <Link className={rest.className} to={rest.to}>cities</Link>
+        return <Link className={rest.className} to={rest.to}>{rest.children}</Link>
     } else {
         return null;
     }
 }
 
+
+function NotLocalProtectedLink({...rest}) {
+    if (!(rest.allCookies && rest.allCookies.login && rest.allCookies.login.username && rest.allCookies.login.token)) {
+        return <Link className={rest.className} to={rest.to}>{rest.children}</Link>
+    } else {
+        return null;
+    }
+}
+
+
 const ProtectedRoute = withCookies(LocalProtectedRoute);
 const ProtectedLink = withCookies(LocalProtectedLink);
+const NotProtectedLink = withCookies(NotLocalProtectedLink);
 
-export {ProtectedRoute, ProtectedLink};
+export {ProtectedRoute, ProtectedLink, NotProtectedLink};
 export default Login;

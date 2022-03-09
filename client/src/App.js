@@ -4,7 +4,7 @@ import {Route, Routes} from 'react-router-dom';
 import NavBar from './NavBar.js';
 import Cities from "./Cities";
 import Home from "./Home";
-import Login, {ProtectedRoute} from "./Login";
+import Login, {ProtectedRoute, NotProtectedLink} from "./Login";
 
 function App() {
     return (
